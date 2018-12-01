@@ -27,7 +27,7 @@
 class Grille
 {
 
-
+  // structure privée de la classe Grille
   struct Case {
     bool estBombe;
     bool estOuvert;
@@ -40,48 +40,57 @@ public:
 
   bool EstTermine(void);
 	void Afficher ( void );
-    // Mode d'emploi :
+    // Mode d'emploi : affiche l'état actuel de la grille dans le terminal
     //
     // Contrat :
     //
 
 	void Commencer(const unsigned int x,const unsigned int y );
-	// Mode d'emploi :
-	//
+	// Mode d'emploi : demande à l'utilisateur d'entrer la première case à ouvrir
+	// la grille sera générée en fonction de cette case de départs
 	// Contrat :
-	//
+	// 0 <= x <= taille_x-1 (taille de donnée au constructeur)
+  // 0 <= y <= taille_y-1 (taille de donnée au constructeur)
 
   bool Click(const unsigned int x,const unsigned int y);
+  // Mode d'emploi :ouvre la case (x,y) puis affiche l'état actuel de la grille
+  // si (x,y) est une bombe, la partie se termine
+  // sinon elle continue
+  // Contrat :
+  // 0 <= x <= taille_x-1 (taille de donnée au constructeur)
+  // 0 <= y <= taille_y-1 (taille de donnée au constructeur)
+
+
   bool Flag(const unsigned int x,const unsigned int y);
+  // Mode d'emploi :pose ou enlève un drapeau à la case (x,y) puis affiche
+  // l'état actuel de la grille
+  // Contrat :
+  // 0 <= x <= taille_x-1 (taille de donnée au constructeur)
+  // 0 <= y <= taille_y-1 (taille de donnée au constructeur)
 
 
-  void AfficherFin(void);
 
   void ResGrille(int * gr);
+  // Mode d'emploi : prend en entrée un tableau gr et met à jour l'état actuel
+  // du jeu dans ce tableau. gr est un tableau applatit.
+  // Contrat :
+  // gr [taille_x * taille_y]
 
-
-//------------------------------------------------- Surcharge d'opérateurs
- //   Grille & operator = ( const Grille & unGrille );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
 
 
 //-------------------------------------------- Constructeurs - destructeur
     Grille (const unsigned int x,const unsigned int y);
     // Mode d'emploi (constructeur de copie) :
-    //
+    // Construit la grille de taille x * y
     // Contrat :
-    //
+    // x>1, y>1
 
 
 
     virtual ~Grille ( );
     // Mode d'emploi :
     // Détruit le tableau représentant l'Grille avant de détruire l'objet lui-même
-    // Contrat :
-    //
+
 
 //------------------------------------------------------------------ PRIVE
 

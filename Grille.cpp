@@ -73,9 +73,10 @@ void Grille::Afficher(void)
       }
     }
   }
+  
   //Afficher la grille non initialisée
-  //usleep(20000);
-  if (system("CLS")) system("clear");
+  usleep(10000);
+  system("clear");
   cout << "    ";
   //première ligne
   for (unsigned int i = 0; i < taille_x; i++)
@@ -149,29 +150,6 @@ bool Grille::Flag(const unsigned int x,const unsigned int y)
   return grille[y*taille_x + x].flag;
 }
 
-
-// type Grille::Méthode ( liste des paramètres )
-// Algorithme :
-//
-//{
-//} //----- Fin de Méthode
-
-
-//------------------------------------------------- Surcharge d'opérateurs
-//Grille Grille::operator = ( const Grille & unGrille )
-// Algorithme :
-//
-//{
-//} //----- Fin de operator =
-
-
-//-------------------------------------------- Constructeurs - destructeur
-//Grille::Grille ( const Grille & Grille )
-// Algorithme :
-//
-//{
-
-//} //----- Fin de Grille (constructeur de copie)
 
 bool Grille::EstTermine(void){
   return estTermine;
@@ -297,96 +275,31 @@ string Grille::getChar(const unsigned int x,const unsigned int y) const
 unsigned int Grille::getNbBombs(const unsigned int x,const unsigned int y) const
 {
   unsigned int nbBomb = 0;
-  if( x != 0 )
+  for(unsigned int k( x> 0 ?x- 1 :x); k <= (x== taille_x -1 ? x : x+ 1); k++)
   {
-    if( y != 0)
-        nbBomb += grille[(y-1)*taille_x + x-1].estBombe ? 1 : 0;
-
-    nbBomb += grille[(y)*taille_x + x-1].estBombe ? 1 : 0;
-
-    if (y != taille_y-1)
-        nbBomb += grille[(y+1)*taille_x + x-1].estBombe ? 1 : 0;
-  }
-
-  if( y != 0)
-      nbBomb += grille[(y-1)*taille_x + x].estBombe ? 1 : 0;
-
-  if (y != taille_y-1)
-      nbBomb += grille[(y+1)*taille_x + x].estBombe ? 1 : 0;
-
-  if (x != taille_x-1)
-  {
-    if( y != 0)
-        nbBomb += grille[(y-1)*taille_x + x+1].estBombe ? 1 : 0;
-
-    nbBomb += grille[(y)*taille_x + x+1].estBombe ? 1 : 0;
-
-    if (y != taille_y-1)
-        nbBomb += grille[(y+1)*taille_x + x+1].estBombe ? 1 : 0;
+    for(unsigned int l( y>0 ? y - 1 : y); l <= ( y == taille_y-1 ? y : y+1); l++)
+    {
+      if( (l != y || k !=x) && grille[l*taille_x + k].estBombe  )
+      {
+        ++nbBomb;
+      }
+    }
   }
   return nbBomb;
 }
 
 void Grille::ouvre(const unsigned int x,const unsigned int y)
 {
-  if( x > 0 )
+  for(unsigned int k( x> 0 ?x- 1 :x); k <= (x== taille_x -1 ? x : x+ 1); k++)
   {
-    if( y > 0 && !(grille[(y-1)*taille_x + x-1].estOuvert))
+    for(unsigned int l( y>0 ? y - 1 : y); l <= ( y == taille_y-1 ? y : y+1); l++)
     {
-        grille[(y-1)*taille_x + x-1].estOuvert = true;
-        if (getNbBombs(x-1, y-1) == 0 )
-            ouvre(x-1, y-1);
-    }
-    if ( ! (grille[(y)*taille_x + x-1].estOuvert))
-    {
-        grille[(y)*taille_x + x-1].estOuvert = true;
-        if (getNbBombs(x-1, y) == 0)
-          ouvre(x-1, y);
-    }
-
-    if (y < taille_y-1 && !(grille[(y+1)*taille_x + x-1].estOuvert))
-    {
-      grille[(y+1)*taille_x + x-1].estOuvert = true;
-      if (getNbBombs(x-1, y+1) == 0)
-          ouvre(x-1, y+1);
-    }
-  }
-
-  if( y > 0 && !(grille[(y-1)*taille_x + x].estOuvert))
-  {
-    grille[(y-1)*taille_x + x].estOuvert = true;
-    if (getNbBombs(x, y-1) == 0)
-        ouvre(x, y-1);
-  }
-
-  if (y < taille_y-1 && !(grille[(y+1)*taille_x + x].estOuvert))
-  {
-    grille[(y+1)*taille_x + x].estOuvert = true;
-    if (getNbBombs(x, y+1) == 0)
-        ouvre(x, y+1);
-  }
-
-  if (x < taille_x-1)
-  {
-    if( y > 0 && !(grille[(y-1)*taille_x + x+1].estOuvert))
-    {
-        grille[(y-1)*taille_x + x+1].estOuvert = true;
-        if (getNbBombs(x+1, y-1) == 0)
-            ouvre(x+1, y-1);
-    }
-
-    if ( !(grille[(y)*taille_x + x+1].estOuvert))
-    {
-      grille[(y)*taille_x + x+1].estOuvert = true;
-      if (getNbBombs(x+1, y) == 0)
-          ouvre(x+1, y);
-    }
-
-    if (y < taille_y-1 && !(grille[(y+1)*taille_x + x+1].estOuvert))
-    {
-      grille[(y+1)*taille_x + x+1].estOuvert = true;
-      if (getNbBombs(x+1, y+1) == 0)
-          ouvre(x+1, y+1);
+      if( (l != y || k !=x) && !(grille[l*taille_x + k].estOuvert) )
+      {
+        grille[l*taille_x + k].estOuvert = true;
+        if (getNbBombs(k, l) == 0 )
+            ouvre(k, l);
+      }
     }
   }
 }
