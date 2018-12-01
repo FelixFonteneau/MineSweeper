@@ -18,6 +18,8 @@ e-mail               : $EMAIL$
 #include <iomanip>
 #include <time.h>
 #include <unistd.h>
+#include <random>
+
 
 #ifdef __cplusplus__
   #include <cstdlib>
@@ -61,10 +63,12 @@ void Grille::Afficher(void)
 {
   if( estCommence && !estTermine)
   {
+    bool termine = true;
     for (unsigned int i(0); i < taille_x; i++ )
     {
       for (unsigned int j(0); j < taille_y; j++)
       {
+        if (! (grille[j*taille_x + i].estOuvert) && !(grille[j*taille_x + i].estBombe) ) termine = false;
         if ( grille[j*taille_x + i].estOuvert && getNbBombs(i,j) < 1)
         {
             ouvre(i, j);
@@ -72,12 +76,13 @@ void Grille::Afficher(void)
 
       }
     }
+    estTermine = termine;
   }
-  
+
   //Afficher la grille non initialisée
-  usleep(10000);
-  system("clear");
-  cout << "    ";
+  //usleep(30000);
+  //system("clear");
+  cout << "\n\n\n\n    ";
   //première ligne
   for (unsigned int i = 0; i < taille_x; i++)
   {
@@ -99,6 +104,7 @@ void Grille::Afficher(void)
 void Grille::Commencer(const unsigned int x, const unsigned int y )
 {
   estCommence = true;
+  //srand((int)time(0));  //initialisation de la séquence aléatoire
   for (unsigned int i(0); i < taille_x; i++ )
   {
     for (unsigned int j(0); j < taille_y; j++)
@@ -123,6 +129,7 @@ void Grille::Commencer(const unsigned int x, const unsigned int y )
 
 bool Grille::Click(const unsigned int x, const unsigned int y )
 {
+  std::cout << "click en : " << x << "," << y << '\n';
   if(!grille[y*taille_x + x].estOuvert && !grille[y*taille_x + x].flag)
   {
     if (grille[y*taille_x + x].estBombe)
@@ -259,11 +266,42 @@ string Grille::getChar(const unsigned int x,const unsigned int y) const
       unsigned int nbBomb = getNbBombs(x,y);
       if ( nbBomb == 0)
       {
-        return "\033[40m   \033[0m";
+        return "\033[0m   \033[0m";
       }
       else
       {
-        string s = "\033[40m ";
+        string couleur;
+
+        //couleur des bombes
+        switch (nbBomb) {
+          case 1:
+            couleur = "\033[44m ";
+            break;
+
+          case 2:
+            couleur = "\033[42m ";
+            break;
+
+          case 3:
+            couleur = "\033[43m ";
+            break;
+
+          case 4:
+            couleur = "\033[40m ";
+            break;
+
+          case 5:
+            couleur = "\033[45m ";
+            break;
+
+          case 6:
+            couleur = "\033[46m ";
+            break;
+
+          default:
+            couleur = "\033[0m ";
+        }
+        string s = couleur;
         s += to_string(nbBomb);
         s += " \033[0m";
         return s;

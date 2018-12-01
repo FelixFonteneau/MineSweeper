@@ -2,7 +2,7 @@ ECHO= @echo
 RM= rm
 COMP= g++
 EDL= g++
-CPPFLAGS= -D MAP -ansi -pedantic -Wall -std=c++11 
+CPPFLAGS= -D MAP -ansi -pedantic -Wall -Werror -std=c++11
 EDLFLAGS=
 RMFLAGS= -f
 INT=Test.h Grille.h
@@ -14,7 +14,7 @@ LIBPATH=
 EFFACE=clean
 EXE=Demineur
 DATE=22.10
-AUTHOR=Felix
+AUTHOR=FelixFonteneau
 YEAR=2018
 EMAIL=felix.fonteneau@insa-lyon.fr
 
